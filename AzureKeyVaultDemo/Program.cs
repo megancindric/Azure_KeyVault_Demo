@@ -1,5 +1,6 @@
 
 using AzureKeyVaultDemo.Data;
+using AzureKeyVaultDemo.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace AzureKeyVaultDemo
@@ -11,6 +12,7 @@ namespace AzureKeyVaultDemo
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+            builder.Services.AddTransient<CatApiService>();
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
