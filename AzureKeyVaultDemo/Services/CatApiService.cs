@@ -6,11 +6,12 @@ namespace AzureKeyVaultDemo.Services
     public class CatApiService
     {
 
-        public async Task<List<Cat>> GetCatAsync()
+        public async Task<List<Cat>> GetCatAsync(string apiKey)
         {
             using(HttpClient client = new HttpClient())
             {
-                HttpResponseMessage response = await client.GetAsync("https://api.thecatapi.com/v1/images/search?limit=50");
+                string requestUrl = $"https://api.thecatapi.com/v1/images/search?limit=50&api_key={apiKey}";
+                HttpResponseMessage response = await client.GetAsync(requestUrl);
                 if (response.IsSuccessStatusCode)
                 {
                     string jsonResponse = await response.Content.ReadAsStringAsync();

@@ -20,7 +20,9 @@ namespace AzureKeyVaultDemo.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            List<Cat> cats = await _catService.GetCatAsync();
+            //TODO - Use Azure KeyVault to extract API Key (CatApiKey)
+            string apiKey = "";
+            List<Cat> cats = await _catService.GetCatAsync(apiKey);
             if (cats == null)
             {
                 return StatusCode(500, "Error within GetCats method");
