@@ -2,6 +2,9 @@
 using AzureKeyVaultDemo.Services;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Mvc;
+using Azure.Identity;
+using Azure.Security.KeyVault.Secrets;
+using Azure.Core;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -20,8 +23,21 @@ namespace AzureKeyVaultDemo.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            //TODO - Use Azure KeyVault to extract API Key (CatApiKey)
-            string apiKey = "";
+            SecretClientOptions options = new SecretClientOptions()
+            {
+                Retry =
+        {
+            Delay= TimeSpan.FromSeconds(2),
+            MaxDelay = TimeSpan.FromSeconds(16),
+            MaxRetries = 5,
+            Mode = RetryMode.Exponential
+         }
+            };
+            var client = new SecretClient(new Uri("https://azure-testing-keyvault.vault.azure.net/"), new DefaultAzureCredential(), options);
+
+            KeyVaultSecret secret = client.GetSecret("MyApiKey");
+
+            string apiKey = secret.Value;
             List<Cat> cats = await _catApiService.GetCatAsync(apiKey);
             if (cats == null)
             {
